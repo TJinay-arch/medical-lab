@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Услуги{% endblock %}
+{% block header_title %}Наши услуги{% endblock %}
+{% block lead_text %}Полный спектр медицинской помощи{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+
+    {% for service in services %}
+
+    <div class="col-md-4">
+
+        <div class="card-custom h-100">
+
+            <h4 class="mb-2">{{ service.name }}</h4>
+
+            <p class="text-muted">
+                {{ service.description }}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+
+                <span class="fw-bold">
+                    {{ service.price }} ₽
+                </span>
+
+                <a href="{% url 'services:service_detail' service.pk %}" class="btn btn-soft-primary btn-sm">
+                    Подробнее
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

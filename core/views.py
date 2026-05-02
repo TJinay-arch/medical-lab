@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, DetailView
 from .forms import ContactForm
 
 from core.models import Doctor
@@ -15,6 +15,7 @@ class HomePageView(TemplateView):
         context['header_title'] = 'Добро пожаловать в МедЦентр „Здоровье Плюс“'
         context[
             'lead_text'] = 'Профессиональная медицинская помощь с заботой о вашем здоровье. Опытные врачи, современное оборудование и индивидуальный подход к каждому пациенту.'
+        context['form'] = ContactForm()
         return context
 
 
@@ -32,7 +33,7 @@ class AboutView(TemplateView):
 class ContactView(FormView):
     template_name = "core/contacts.html"
     form_class = ContactForm
-    success_url = reverse_lazy("contacts")
+    success_url = reverse_lazy("core:home")
 
     def form_valid(self, form):
         name = form.cleaned_data["name"]
@@ -44,3 +45,8 @@ class ContactView(FormView):
 
         messages.success(self.request, "Сообщение успешно отправлено!")
         return super().form_valid(form)
+
+class DoctorDetailView(DetailView):
+    model = Doctor
+    template_name = "core/doctor_detail.html"
+    context_object_name = "doctor"

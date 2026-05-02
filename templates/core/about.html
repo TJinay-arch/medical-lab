@@ -107,7 +107,7 @@
                         Стаж: {{ doctor.experience_years }} лет
                     </p>
 
-                    <a href="#" class="btn btn-sm btn-soft-primary mt-2">
+                    <a href="{% url 'core:doctor_detail' doctor.pk %}" class="btn btn-sm btn-soft-primary">
                         Профиль
                     </a>
 

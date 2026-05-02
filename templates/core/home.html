@@ -140,28 +140,36 @@
                 Мы ответим вам в ближайшее время
             </p>
 
-            <form>
+            <form method="post" action="{% url 'core:contacts' %}">
+
+                {% csrf_token %}
+
                 <div class="row g-3">
 
                     <div class="col-md-6">
-                        <input class="form-control" placeholder="Ваше имя">
+                        {{ form.name }}
                     </div>
 
                     <div class="col-md-6">
-                        <input class="form-control" placeholder="Email">
+                        {{ form.email }}
                     </div>
 
                     <div class="col-12">
-                        <textarea class="form-control" rows="5" placeholder="Сообщение"></textarea>
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form.message }}
                     </div>
 
                     <div class="col-12 text-center">
-                        <button class="btn btn-primary px-5">
+                        <button type="submit" class="btn btn-primary px-5">
                             Отправить
                         </button>
                     </div>
 
                 </div>
+
             </form>
 
         </div>

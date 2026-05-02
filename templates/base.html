@@ -30,7 +30,17 @@
 
     </div>
 </header>
+<div class="toast-container-custom">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm toast-alert" role="alert">
 
+        {{ message }}
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+    </div>
+    {% endfor %}
+</div>
 <section class="hero-section text-center">
     <div class="container">
         <h1 class="hero-title">{% block header_title %}{% endblock %}</h1>
@@ -46,7 +56,7 @@
 <footer class="footer-custom mt-5">
     <div class="container py-5">
         <div class="text-center text-muted">
-            © 2024 МедЦентр
+            © 2026 МедЦентр
         </div>
     </div>
 </footer>
@@ -72,6 +82,27 @@
         toggle.innerText = newTheme === "dark" ? "☀️" : "🌙";
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
+        const alerts = document.querySelectorAll(".alert");
+
+        alerts.forEach((alert) => {
+
+            // через 3.5 секунды начинаем скрывать
+            setTimeout(() => {
+    alert.style.opacity = "0";
+    alert.style.transform = "translateY(-10px)";
+
+    setTimeout(() => {
+        alert.remove();
+    }, 300);
+
+}, 3500);
+
+        });
+
+    });
+</script>
 </body>
 </html>

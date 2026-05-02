@@ -3,17 +3,9 @@
     <a class="nav-link-custom" href="{% url 'core:about' %}">О компании</a>
 
     <!-- DROPDOWN БЕЗ КНОПКИ -->
-    <div class="dropdown">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">
-            Услуги
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-            <li><a class="dropdown-item" href="#">Терапия</a></li>
-            <li><a class="dropdown-item" href="#">Педиатрия</a></li>
-            <li><a class="dropdown-item" href="#">Кардиология</a></li>
-            <li><a class="dropdown-item" href="#">Неврология</a></li>
-        </ul>
-    </div>
+    <a class="nav-link-custom" href="{% url 'services:services' %}">
+        Услуги
+    </a>
 
     <a class="nav-link-custom" href="{% url 'core:contacts' %}">Контакты</a>
 
