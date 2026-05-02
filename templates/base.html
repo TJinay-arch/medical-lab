@@ -41,12 +41,14 @@
     </div>
     {% endfor %}
 </div>
+{% block hero %}
 <section class="hero-section text-center">
     <div class="container">
         <h1 class="hero-title">{% block header_title %}{% endblock %}</h1>
         <p class="hero-subtitle">{% block lead_text %}{% endblock %}</p>
     </div>
 </section>
+{% endblock %}
 
 <div class="container my-5">
     {% block content %}
