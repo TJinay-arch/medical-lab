@@ -1,0 +1,305 @@
+/* =========================
+   THEME VARIABLES
+========================= */
+
+:root {
+    --bg: #f7f9fc;
+    --text: #1a1a1a;
+    --card: #ffffff;
+    --muted: #6c757d;
+    --border: #eaeaea;
+}
+
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --text: #e5e7eb;
+    --card: #1e293b;
+    --muted: #94a3b8;
+    --border: #334155;
+}
+
+/* =========================
+   SMOOTH THEME TRANSITION
+========================= */
+
+/* ⚡ ключевая часть */
+* {
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar-custom {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-link {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.logo {
+    font-weight: 600;
+}
+
+.nav-link-custom {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.nav-link-custom:hover {
+    color: #0d6efd;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero-section {
+    padding: 80px 0 60px;
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 600;
+}
+
+.hero-subtitle {
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card-custom {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    transition: 0.3s;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+}
+
+/* =========================
+   SERVICES
+========================= */
+
+.service-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta-block {
+    background: var(--card);
+    padding: 50px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.dropdown-menu {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    color: var(--text);
+}
+
+.dropdown-item:hover {
+    background: rgba(13, 110, 253, 0.1);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer-custom {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+}
+
+.footer-custom a {
+    text-decoration: none;
+    color: var(--muted);
+}
+
+.footer-custom a:hover {
+    color: #0d6efd;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-soft-primary {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    border: none;
+}
+
+.btn-soft-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: none;
+}
+
+/* ABOUT IMAGE */
+.about-image-placeholder {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, #e7f0ff, #f7f9fc);
+    border-radius: 16px;
+}
+
+/* MAP */
+.map-placeholder {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, #ddd, #bbb);
+    border-radius: 16px;
+}
+
+/* FORM */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+}
+
+/* ТЕКСТ */
+p, h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+}
+
+/* muted текст */
+.text-muted {
+    color: var(--muted) !important;
+}
+
+/* ФОРМА */
+.form-control {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+/* placeholder */
+.form-control::placeholder {
+    color: var(--muted);
+}
+
+/* фикс autofill (иногда бесит) */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text);
+}
+
+/* ================= DOCTOR CARD ================= */
+
+.doctor-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.doctor-card:hover {
+    transform: translateY(-5px);
+}
+
+/* фото сверху — НЕ круг */
+.doctor-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+}
+
+/* если нет фото */
+.doctor-img.placeholder {
+    background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+    width: 100%;
+    height: 220px;
+}
+
+.map-iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+}
+
+.cta-block form .form-control {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.cta-block form .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 4px rgba(13,110,253,0.1);
+}
+
+/* spacing между полями */
+.cta-block form .form-control {
+    margin-bottom: 12px;
+}
+
+/* кнопка */
+.cta-block .btn-primary {
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 500;
+}
+
+.cta-block,
+.card-custom {
+    height: 100%;
+}
