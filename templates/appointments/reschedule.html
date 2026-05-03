@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Перенос записи{% endblock %}
+{% block header_title %}Перенос записи{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card-custom p-4 col-md-6 mx-auto">
+
+        <h4 class="mb-3">Выберите новую дату</h4>
+
+        <form method="post" id="reschedule-form">
+            {% csrf_token %}
+
+            <!-- ДАТА -->
+            <div class="mb-3">
+                <input type="date" id="date" class="form-control">
+            </div>
+
+            <!-- СЛОТЫ -->
+            <div class="mb-3">
+                <div id="slots" class="d-flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- СКРЫТОЕ ПОЛЕ -->
+            <input type="hidden" name="date" id="final-datetime">
+
+            <button class="btn btn-primary w-100 mb-2">
+                Сохранить
+            </button>
+
+            <!-- НАЗАД -->
+            <a href="{% url 'appointments:list' %}"
+               class="btn btn-outline-secondary w-100">
+                ← Вернуться к записям
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    const dateInput = document.getElementById("date");
+    const slotsDiv = document.getElementById("slots");
+    const finalInput = document.getElementById("final-datetime");
+
+    const doctorId = "{{ object.doctor.id }}";
+
+    dateInput.addEventListener("change", function () {
+        const date = this.value;
+
+        fetch(`/appointments/api/slots/?doctor=${doctorId}&date=${date}`)
+            .then(res => res.json())
+            .then(data => {
+
+                slotsDiv.innerHTML = "";
+
+                data.slots.forEach(slot => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "btn btn-outline-primary btn-sm";
+                    btn.textContent = slot;
+
+                    btn.onclick = () => {
+                        document.querySelectorAll("#slots button")
+                            .forEach(b => b.classList.remove("active"));
+
+                        btn.classList.add("active");
+
+                        finalInput.value = `${date}T${slot}`;
+                    };
+
+                    slotsDiv.appendChild(btn);
+                });
+            });
+    });
+</script>
+
+{% endblock %}

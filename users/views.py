@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -96,3 +97,16 @@ class RegisterView(CreateView):
             "Мы отправили письмо на вашу почту. Подтвердите регистрацию."
         )
         return redirect(self.success_url)
+
+@login_required
+def dashboard_router(request):
+    user = request.user
+
+    if user.role == "doctor":
+        return redirect("core:doctor_dashboard")
+
+    if user.role == "admin":
+        return redirect("appointments:list")
+
+    # пациент
+    return redirect("appointments:list")

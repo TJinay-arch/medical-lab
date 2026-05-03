@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Кабинет врача{% endblock %}
+
+{% block header_title %}Кабинет врача{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- УВЕДОМЛЕНИЯ -->
+    <div class="card-custom mb-4">
+        <h4>Уведомления</h4>
+
+        {% if notifications %}
+        {% for n in notifications %}
+        <div class="alert alert-info mb-2">
+            {{ n.text }}
+            <div class="text-muted small">
+                {{ n.created_at|date:"d.m H:i" }}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted">Нет уведомлений</p>
+        {% endif %}
+    </div>
+
+    <!-- ЗАПИСИ ПО ДНЯМ -->
+    <div class="card-custom">
+
+        <h4 class="mb-3">Расписание</h4>
+
+        {% for day, apps in appointments_by_day.items %}
+
+        <h5 class="mt-3">{{ day }}</h5>
+
+        <div class="row">
+
+            {% for app in apps %}
+            <div class="col-md-6 mb-2">
+                <div class="border p-2 rounded">
+
+                    <strong>{{ app.service.name }}</strong><br>
+
+                    Пациент: {{ app.user }}<br>
+
+                    Время: {{ app.date|date:"H:i" }}
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

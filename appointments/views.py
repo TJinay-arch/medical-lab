@@ -1,7 +1,18 @@
-from django.views.generic import CreateView
+from datetime import datetime
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.dateparse import parse_datetime
+from django.views import View
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
+from django.utils.timezone import now
+from core.models import Doctor
 from .models import Appointment
 from .forms import AppointmentForm
+from .services import get_available_slots
+from services.email import send_notification_email
 
 
 class AppointmentCreateView(CreateView):
@@ -31,5 +42,97 @@ class AppointmentCreateView(CreateView):
         if service_id:
             form.instance.service_id = service_id
 
+        date = form.cleaned_data["date"]
+        time = self.request.POST.get("time")
+
+        dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
+
+        form.instance.date = dt
+        doctor = form.instance.doctor
+        if doctor and hasattr(doctor, "user") and doctor.user and doctor.user.email:
+            send_notification_email(
+                form.instance.doctor.user.email,
+                "Новая запись на приём",
+                f"У вас новая запись на {form.instance.date} от {self.request.user}"
+            )
+
         return super().form_valid(form)
 
+
+class DoctorSlotsAPIView(View):
+
+    def get(self, request, *args, **kwargs):
+        doctor_id = request.GET.get("doctor")
+        date = request.GET.get("date")
+
+        doctor = Doctor.objects.get(id=doctor_id)
+        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+
+        slots = get_available_slots(doctor, date_obj)
+
+        data = [
+            slot.strftime("%H:%M")
+            for slot in slots
+        ]
+
+        return JsonResponse(data, safe=False)
+
+
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = "appointments/list.html"
+    context_object_name = "appointments"
+
+    def get_queryset(self):
+        qs = Appointment.objects.filter(
+            user=self.request.user
+        ).select_related("doctor", "service").order_by("-date")
+
+        filter_type = self.request.GET.get("filter")
+
+        if filter_type == "upcoming":
+            qs = qs.filter(date__gte=now())
+
+        elif filter_type == "past":
+            qs = qs.filter(date__lt=now())
+
+        return qs
+
+
+class AppointmentCancelConfirmView(DetailView):
+    model = Appointment
+    template_name = "appointments/cancel_confirm.html"
+    context_object_name = "appointment"
+
+
+class AppointmentCancelView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        appointment = get_object_or_404(
+            Appointment,
+            id=pk,
+            user=request.user
+        )
+
+        appointment.status = Appointment.Status.CANCELED
+        appointment.save()
+
+        return redirect("appointments:list")
+
+
+class AppointmentRescheduleView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    fields = []
+    template_name = "appointments/reschedule.html"
+    success_url = reverse_lazy("appointments:list")
+
+    def get_queryset(self):
+        return Appointment.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        new_date = self.request.POST.get("date")
+
+        if new_date:
+            form.instance.date = parse_datetime(new_date)
+
+        return super().form_valid(form)

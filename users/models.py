@@ -3,6 +3,16 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
+    class Role(models.TextChoices):
+        PATIENT = "patient", "Пациент"
+        DOCTOR = "doctor", "Врач"
+        ADMIN = "admin", "Администратор"
+
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.PATIENT
+    )
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)

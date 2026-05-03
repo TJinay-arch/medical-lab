@@ -5,6 +5,12 @@ from services.models import Service
 
 
 class AppointmentForm(forms.ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"})
+    )
+
+    time = forms.CharField(required=False)
+
     class Meta:
         model = Appointment
         fields = ["doctor", "service", "date", "comment"]

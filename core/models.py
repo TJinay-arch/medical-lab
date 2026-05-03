@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import CustomUser
+
 
 class Doctor(models.Model):
     SPECIALIZATIONS = [
@@ -9,7 +11,13 @@ class Doctor(models.Model):
         ("neurologist", "Невролог"),
         ("lab", "Лабораторная диагностика"),
     ]
-
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="doctor_profile",
+        null=True,
+        blank=True
+    )
     first_name = models.CharField("Имя", max_length=50)
     last_name = models.CharField("Фамилия", max_length=50)
 
@@ -38,3 +46,10 @@ class Doctor(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
