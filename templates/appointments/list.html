@@ -69,7 +69,12 @@
                     {% endif %}
 
                 </div>
-
+                {% if appointment.result %}
+                <a href="{% url 'appointments:result_detail' appointment.result.id %}"
+                   class="btn btn-outline-success btn-sm">
+                    Результаты
+                </a>
+                {% endif %}
             </div>
 
         </div>

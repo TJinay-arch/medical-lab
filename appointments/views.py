@@ -8,11 +8,11 @@ from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
 from django.utils.timezone import now
-from core.models import Doctor
-from .models import Appointment
-from .forms import AppointmentForm
+from core.models import Doctor, Notification
+from .models import Appointment, DiagnosticResult
+from .forms import AppointmentForm, DiagnosticResultForm
 from .services import get_available_slots
-from services.email import send_notification_email
+from services.email import send_notification_email, send_result_ready_email
 
 
 class AppointmentCreateView(CreateView):
@@ -136,3 +136,57 @@ class AppointmentRescheduleView(LoginRequiredMixin, UpdateView):
             form.instance.date = parse_datetime(new_date)
 
         return super().form_valid(form)
+
+
+class ResultDetailView(LoginRequiredMixin, DetailView):
+    model = DiagnosticResult
+    template_name = "appointments/result_detail.html"
+    context_object_name = "result"
+
+
+class DoctorResultUpdateView(LoginRequiredMixin, UpdateView):
+    model = DiagnosticResult
+    form_class = DiagnosticResultForm
+    template_name = "appointments/doctor_result_form.html"
+
+    def get_object(self):
+        appointment_id = self.kwargs.get("appointment_id")
+
+        appointment = get_object_or_404(
+            Appointment,
+            id=appointment_id,
+            doctor=self.request.user.doctor_profile
+        )
+
+        obj, created = DiagnosticResult.objects.get_or_create(
+            appointment=appointment
+        )
+
+        self.is_created = created
+        return obj
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        appointment = self.object.appointment
+
+        appointment.status = "done"
+        appointment.save()
+
+        Notification.objects.create(
+            user=appointment.user,
+            text=f"Результаты от {appointment.date.strftime('%d.%m %H:%M')} готовы"
+        )
+
+        try:
+            send_result_ready_email(
+                appointment.user,
+                appointment
+            )
+        except Exception as e:
+            print("❌ Ошибка при вызове email:", e)
+
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("core:doctor_dashboard")

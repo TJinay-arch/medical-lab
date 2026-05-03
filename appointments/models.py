@@ -44,3 +44,28 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.user} → {self.service} ({self.date})"
+
+
+from django.db import models
+from .models import Appointment
+
+
+class DiagnosticResult(models.Model):
+    appointment = models.OneToOneField(
+        Appointment,
+        on_delete=models.CASCADE,
+        related_name="result"
+    )
+
+    text = models.TextField("Заключение врача")
+
+    file = models.FileField(
+        upload_to="diagnostics/",
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Результат {self.appointment_id}"

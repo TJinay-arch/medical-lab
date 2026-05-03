@@ -1,5 +1,5 @@
 from django import forms
-from .models import Appointment
+from .models import Appointment, DiagnosticResult
 from core.models import Doctor
 from services.models import Service
 
@@ -55,3 +55,20 @@ class AppointmentForm(forms.ModelForm):
 
             # фильтруем врачей
             self.fields["doctor"].queryset = service.doctors.all()
+
+
+class DiagnosticResultForm(forms.ModelForm):
+    class Meta:
+        model = DiagnosticResult
+        fields = ["text", "file"]
+
+        widgets = {
+            "text": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Введите заключение врача..."
+            }),
+            "file": forms.ClearableFileInput(attrs={
+                "class": "form-control"
+            })
+        }

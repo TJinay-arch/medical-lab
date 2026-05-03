@@ -1,12 +1,11 @@
-from collections import defaultdict
-
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.urls import reverse_lazy
+from django.utils.formats import date_format
 from django.views.generic import TemplateView, FormView, DetailView
-
+from django.utils import translation
 from appointments.models import Appointment
-from users.mixins import RoleRequiredMixin
 from .forms import ContactForm
 
 from core.models import Doctor, Notification
@@ -66,7 +65,7 @@ class DoctorDashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
-
+        translation.activate("ru")
         # только врач
         if user.role != "doctor":
             return context
@@ -79,17 +78,34 @@ class DoctorDashboardView(LoginRequiredMixin, TemplateView):
         ).order_by("-created_at")[:10]
 
         # записи врача
+        filter_type = self.request.GET.get("filter", "active")
+        page_number = self.request.GET.get("page", 1)
+
         appointments = Appointment.objects.filter(
             doctor=doctor
-        ).order_by("date")
+        )
 
-        # группировка по дням
+        if filter_type == "active":
+            appointments = appointments.filter(
+                status__in=["new", "confirmed"]
+            )
+        elif filter_type == "done":
+            appointments = appointments.filter(status="done")
+
+        appointments = appointments.order_by("date")
+
+        paginator = Paginator(appointments, 4)
+        page_obj = paginator.get_page(page_number)
+
+        # группировка только текущей страницы
         grouped = {}
 
-        for app in appointments:
-            day = app.date.date()
+        for app in page_obj:
+            day = date_format(app.date, "l, j E")
             grouped.setdefault(day, []).append(app)
 
         context["appointments_by_day"] = grouped
+        context["page_obj"] = page_obj
+        context["filter"] = filter_type
 
         return context

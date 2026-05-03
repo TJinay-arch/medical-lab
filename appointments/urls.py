@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import AppointmentCreateView, DoctorSlotsAPIView, AppointmentListView, AppointmentCancelView, \
-    AppointmentRescheduleView, AppointmentCancelConfirmView
+    AppointmentRescheduleView, AppointmentCancelConfirmView, ResultDetailView, DoctorResultUpdateView
 
 app_name = "appointments"
 
@@ -11,4 +11,10 @@ urlpatterns = [
     path("cancel/<int:pk>/", AppointmentCancelConfirmView.as_view(), name="cancel_confirm"),
     path("reschedule/<int:pk>/", AppointmentRescheduleView.as_view(), name="reschedule"),
     path("cancel/<int:pk>/confirm/", AppointmentCancelView.as_view(), name="cancel"),
+    path("result/<int:pk>/", ResultDetailView.as_view(), name="result_detail"),
+    path(
+        "doctor/result/<int:appointment_id>/",
+        DoctorResultUpdateView.as_view(),
+        name="doctor_result"
+    ),
 ]
