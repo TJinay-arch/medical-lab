@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Запись на прием{% endblock %}
+
+{% block header_title %}Запись на прием{% endblock %}
+
+{% block lead_text %}
+Выберите врача, услугу и удобное время
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card-custom">
+
+            <h3 class="mb-4 text-center">Форма записи</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ВРАЧ -->
+                <div class="mb-3">
+                    <label class="form-label">Врач</label>
+                    {{ form.doctor }}
+                </div>
+
+                <!-- УСЛУГА -->
+                <div class="mb-3">
+                    <label class="form-label">Услуга</label>
+                    {{ form.service }}
+                </div>
+
+                <!-- ДАТА -->
+                <div class="mb-3">
+                    <label class="form-label">Дата приема</label>
+                    {{ form.date }}
+                </div>
+
+                <!-- КОММЕНТАРИЙ -->
+                <div class="mb-3">
+                    <label class="form-label">Комментарий</label>
+                    {{ form.comment }}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Записаться
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- INFO BLOCK -->
+        <div class="text-center mt-3 text-muted small">
+            После записи врач подтвердит ваш прием
+        </div>
+
+    </div>
+
+</div>
+<script>
+    document.getElementById("id_doctor").addEventListener("change", function() {
+        const doctorId = this.value;
+        const serviceSelect = document.getElementById("id_service");
+
+        fetch(`/appointments/ajax/services/?doctor=${doctorId}`)
+            .then(res => res.json())
+            .then(data => {
+                serviceSelect.innerHTML = "";
+
+                data.forEach(service => {
+                    const option = document.createElement("option");
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    serviceSelect.appendChild(option);
+                });
+            });
+    });
+</script>
+{% endblock %}

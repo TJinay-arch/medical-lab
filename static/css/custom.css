@@ -331,3 +331,23 @@ input:-webkit-autofill:focus {
     align-items: stretch !important;
 }
 
+/* =========================
+   DOCTOR DETAIL IMAGE FIX
+========================= */
+
+.doctor-detail-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center top; /* ключевое исправление */
+    border-radius: 16px;
+    display: block;
+}
+
+/* placeholder тоже выравниваем */
+.doctor-detail-img.placeholder {
+    width: 100%;
+    height: 420px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+}

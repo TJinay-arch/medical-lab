@@ -46,7 +46,8 @@
                 {{ service.price }} ₽
             </div>
 
-            <a href="#" class="btn btn-primary w-100 mb-2">
+            <a href="{% url 'appointments:create' %}?service={{ service.id }}"
+               class="btn btn-primary">
                 Записаться
             </a>
 

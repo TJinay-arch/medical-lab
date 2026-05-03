@@ -55,8 +55,9 @@
                 Принимает пациентов по записи и ведёт индивидуальные программы лечения.
             </p>
 
-            <a href="#" class="btn btn-primary mt-3">
-                Записаться к врачу
+            <a href="{% url 'appointments:create' %}?doctor={{ doctor.id }}"
+               class="btn btn-primary">
+                Записаться
             </a>
 
         </div>

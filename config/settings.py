@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "users",
     "core",
     "services",
+    "appointments",
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
