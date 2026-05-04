@@ -126,11 +126,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/app/static"
 
-
 # Media Files Settings
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/app/media"
-
 
 PASSWORD_FOR_MAIL = os.getenv("PASSWORD_FOR_MAIL")
 
@@ -143,3 +141,7 @@ EMAIL_HOST_PASSWORD = PASSWORD_FOR_MAIL
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_URL = '/users/login'
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.MD5PasswordHasher",
+]

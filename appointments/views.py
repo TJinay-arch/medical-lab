@@ -15,7 +15,7 @@ from .services import get_available_slots
 from services.email import send_notification_email, send_result_ready_email
 
 
-class AppointmentCreateView(CreateView):
+class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = "appointments/create.html"
