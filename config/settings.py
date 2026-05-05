@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "appointments",
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -132,15 +132,15 @@ MEDIA_ROOT = "/app/media"
 
 PASSWORD_FOR_MAIL = os.getenv("PASSWORD_FOR_MAIL")
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.mail.ru"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ilya-payusov@mail.ru'
+EMAIL_HOST_USER = "ilya-payusov@mail.ru"
 EMAIL_HOST_PASSWORD = PASSWORD_FOR_MAIL
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-LOGIN_URL = '/users/login'
+LOGIN_URL = "/users/login"
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",

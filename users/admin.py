@@ -1,13 +1,17 @@
 from django.contrib import admin
 
 from core.models import Doctor
+
 from .models import CustomUser
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("email", "phone_number", "country", "role")
-    list_filter = ("country", "role",)
+    list_filter = (
+        "country",
+        "role",
+    )
     search_fields = (
         "email",
         "phone_number",

@@ -1,5 +1,5 @@
-from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import render_to_string
 
 
@@ -26,16 +26,13 @@ def send_result_ready_email(user, appointment):
     }
 
     try:
-        html_content = render_to_string(
-            "emails/result_ready.html",
-            context
-        )
+        html_content = render_to_string("emails/result_ready.html", context)
 
         msg = EmailMultiAlternatives(
             subject=subject,
             body="Ваши результаты готовы. Зайдите в личный кабинет.",
             from_email=settings.EMAIL_HOST_USER,
-            to=[user.email]
+            to=[user.email],
         )
 
         msg.attach_alternative(html_content, "text/html")

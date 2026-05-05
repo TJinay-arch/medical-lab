@@ -3,16 +3,18 @@ from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.dateparse import parse_datetime
-from django.views import View
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
+from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
+from django.views import View
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+
 from core.models import Doctor, Notification
-from .models import Appointment, DiagnosticResult
-from .forms import AppointmentForm, DiagnosticResultForm
-from .services import get_available_slots
 from services.email import send_notification_email, send_result_ready_email
+
+from .forms import AppointmentForm, DiagnosticResultForm
+from .models import Appointment, DiagnosticResult
+from .services import get_available_slots
 
 
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
@@ -53,7 +55,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             send_notification_email(
                 form.instance.doctor.user.email,
                 "Новая запись на приём",
-                f"У вас новая запись на {form.instance.date} от {self.request.user}"
+                f"У вас новая запись на {form.instance.date} от {self.request.user}",
             )
 
         return super().form_valid(form)
@@ -70,10 +72,7 @@ class DoctorSlotsAPIView(View):
 
         slots = get_available_slots(doctor, date_obj)
 
-        data = [
-            slot.strftime("%H:%M")
-            for slot in slots
-        ]
+        data = [slot.strftime("%H:%M") for slot in slots]
 
         return JsonResponse(data, safe=False)
 
@@ -84,9 +83,7 @@ class AppointmentListView(LoginRequiredMixin, ListView):
     context_object_name = "appointments"
 
     def get_queryset(self):
-        qs = Appointment.objects.filter(
-            user=self.request.user
-        ).select_related("doctor", "service").order_by("-date")
+        qs = Appointment.objects.filter(user=self.request.user).select_related("doctor", "service").order_by("-date")
 
         filter_type = self.request.GET.get("filter")
 
@@ -108,11 +105,7 @@ class AppointmentCancelConfirmView(DetailView):
 class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        appointment = get_object_or_404(
-            Appointment,
-            id=pk,
-            user=request.user
-        )
+        appointment = get_object_or_404(Appointment, id=pk, user=request.user)
 
         appointment.status = Appointment.Status.CANCELED
         appointment.save()
@@ -152,15 +145,9 @@ class DoctorResultUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         appointment_id = self.kwargs.get("appointment_id")
 
-        appointment = get_object_or_404(
-            Appointment,
-            id=appointment_id,
-            doctor=self.request.user.doctor_profile
-        )
+        appointment = get_object_or_404(Appointment, id=appointment_id, doctor=self.request.user.doctor_profile)
 
-        obj, created = DiagnosticResult.objects.get_or_create(
-            appointment=appointment
-        )
+        obj, created = DiagnosticResult.objects.get_or_create(appointment=appointment)
 
         self.is_created = created
         return obj
@@ -174,15 +161,11 @@ class DoctorResultUpdateView(LoginRequiredMixin, UpdateView):
         appointment.save()
 
         Notification.objects.create(
-            user=appointment.user,
-            text=f"Результаты от {appointment.date.strftime('%d.%m %H:%M')} готовы"
+            user=appointment.user, text=f"Результаты от {appointment.date.strftime('%d.%m %H:%M')} готовы"
         )
 
         try:
-            send_result_ready_email(
-                appointment.user,
-                appointment
-            )
+            send_result_ready_email(appointment.user, appointment)
         except Exception as e:
             print("❌ Ошибка при вызове email:", e)
 

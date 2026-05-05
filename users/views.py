@@ -1,19 +1,19 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView, LogoutView
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.views import View
 from django.views.generic import CreateView
 
 from .forms import CustomUserCreationForm, LoginForm
-from django.views import View
-from django.shortcuts import redirect
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login, get_user_model
 
 User = get_user_model()
 
@@ -72,16 +72,16 @@ class RegisterView(CreateView):
         token = default_token_generator.make_token(user)
 
         activation_link = self.request.build_absolute_uri(
-            reverse("users:activate", kwargs={
-                "uidb64": uid,
-                "token": token
-            })
+            reverse("users:activate", kwargs={"uidb64": uid, "token": token})
         )
 
-        html_content = render_to_string("emails/activation_email.html", {
-            "user": user,
-            "activation_link": activation_link,
-        })
+        html_content = render_to_string(
+            "emails/activation_email.html",
+            {
+                "user": user,
+                "activation_link": activation_link,
+            },
+        )
 
         email = EmailMultiAlternatives(
             subject="Подтверждение регистрации",
@@ -92,11 +92,9 @@ class RegisterView(CreateView):
 
         email.attach_alternative(html_content, "text/html")
         email.send()
-        messages.success(
-            self.request,
-            "Мы отправили письмо на вашу почту. Подтвердите регистрацию."
-        )
+        messages.success(self.request, "Мы отправили письмо на вашу почту. Подтвердите регистрацию.")
         return redirect(self.success_url)
+
 
 @login_required
 def dashboard_router(request):

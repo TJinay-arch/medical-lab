@@ -8,11 +8,7 @@ class CustomUser(AbstractUser):
         DOCTOR = "doctor", "Врач"
         ADMIN = "admin", "Администратор"
 
-    role = models.CharField(
-        max_length=20,
-        choices=Role.choices,
-        default=Role.PATIENT
-    )
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.PATIENT)
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)

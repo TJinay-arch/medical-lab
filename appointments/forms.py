@@ -1,13 +1,13 @@
 from django import forms
-from .models import Appointment, DiagnosticResult
+
 from core.models import Doctor
 from services.models import Service
 
+from .models import Appointment, DiagnosticResult
+
 
 class AppointmentForm(forms.ModelForm):
-    date = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"})
-    )
+    date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
 
     time = forms.CharField(required=False)
 
@@ -18,14 +18,8 @@ class AppointmentForm(forms.ModelForm):
         widgets = {
             "doctor": forms.Select(attrs={"class": "form-control"}),
             "service": forms.Select(attrs={"class": "form-control"}),
-            "date": forms.DateTimeInput(attrs={
-                "type": "datetime-local",
-                "class": "form-control"
-            }),
-            "comment": forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": 3
-            }),
+            "date": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
+            "comment": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -63,12 +57,8 @@ class DiagnosticResultForm(forms.ModelForm):
         fields = ["text", "file"]
 
         widgets = {
-            "text": forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": 5,
-                "placeholder": "Введите заключение врача..."
-            }),
-            "file": forms.ClearableFileInput(attrs={
-                "class": "form-control"
-            })
+            "text": forms.Textarea(
+                attrs={"class": "form-control", "rows": 5, "placeholder": "Введите заключение врача..."}
+            ),
+            "file": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }

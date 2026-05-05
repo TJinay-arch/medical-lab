@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
+
 from .models import Appointment
 
 WORK_START = time(9, 0)
@@ -23,10 +24,7 @@ def generate_slots(date):
 def get_available_slots(doctor, date):
     slots = generate_slots(date)
 
-    busy = Appointment.objects.filter(
-        doctor=doctor,
-        date__date=date
-    ).values_list("date", flat=True)
+    busy = Appointment.objects.filter(doctor=doctor, date__date=date).values_list("date", flat=True)
 
     available = [slot for slot in slots if slot not in busy]
 

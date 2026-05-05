@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import DetailView, TemplateView
 
 from services.models import Service
 
@@ -10,6 +10,7 @@ class ServicesView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["services"] = Service.objects.all()
         return context
+
 
 class ServiceDetailView(DetailView):
     model = Service

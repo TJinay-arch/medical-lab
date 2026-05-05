@@ -2,25 +2,28 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
-from django.utils.formats import date_format
-from django.views.generic import TemplateView, FormView, DetailView
 from django.utils import translation
-from appointments.models import Appointment
-from .forms import ContactForm
+from django.utils.formats import date_format
+from django.views.generic import DetailView, FormView, TemplateView
 
+from appointments.models import Appointment
 from core.models import Doctor, Notification
+
+from .forms import ContactForm
 
 
 class HomePageView(TemplateView):
-    template_name = 'core/home.html'
+    template_name = "core/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Главная — МедЦентр „Здоровье Плюс“'
-        context['header_title'] = 'Добро пожаловать в МедЦентр „Здоровье Плюс“'
-        context[
-            'lead_text'] = 'Профессиональная медицинская помощь с заботой о вашем здоровье. Опытные врачи, современное оборудование и индивидуальный подход к каждому пациенту.'
-        context['form'] = ContactForm()
+        context["page_title"] = "Главная — МедЦентр „Здоровье Плюс“"
+        context["header_title"] = "Добро пожаловать в МедЦентр „Здоровье Плюс“"
+        context["lead_text"] = (
+            "Профессиональная медицинская помощь с заботой о вашем здоровье. "
+            "Опытные врачи, современное оборудование и индивидуальный подход к каждому пациенту."
+        )
+        context["form"] = ContactForm()
         return context
 
 
@@ -73,22 +76,16 @@ class DoctorDashboardView(LoginRequiredMixin, TemplateView):
         doctor = user.doctor_profile
 
         # уведомления
-        context["notifications"] = Notification.objects.filter(
-            user=user
-        ).order_by("-created_at")[:10]
+        context["notifications"] = Notification.objects.filter(user=user).order_by("-created_at")[:10]
 
         # записи врача
         filter_type = self.request.GET.get("filter", "active")
         page_number = self.request.GET.get("page", 1)
 
-        appointments = Appointment.objects.filter(
-            doctor=doctor
-        )
+        appointments = Appointment.objects.filter(doctor=doctor)
 
         if filter_type == "active":
-            appointments = appointments.filter(
-                status__in=["new", "confirmed"]
-            )
+            appointments = appointments.filter(status__in=["new", "confirmed"])
         elif filter_type == "done":
             appointments = appointments.filter(status="done")
 

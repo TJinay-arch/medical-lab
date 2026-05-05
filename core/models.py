@@ -12,29 +12,16 @@ class Doctor(models.Model):
         ("lab", "Лабораторная диагностика"),
     ]
     user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name="doctor_profile",
-        null=True,
-        blank=True
+        CustomUser, on_delete=models.CASCADE, related_name="doctor_profile", null=True, blank=True
     )
     first_name = models.CharField("Имя", max_length=50)
     last_name = models.CharField("Фамилия", max_length=50)
 
-    specialization = models.CharField(
-        "Специализация",
-        max_length=50,
-        choices=SPECIALIZATIONS
-    )
+    specialization = models.CharField("Специализация", max_length=50, choices=SPECIALIZATIONS)
 
     experience_years = models.PositiveIntegerField("Стаж (лет)", default=0)
 
-    photo = models.ImageField(
-        "Фото",
-        upload_to="doctors/",
-        blank=True,
-        null=True
-    )
+    photo = models.ImageField("Фото", upload_to="doctors/", blank=True, null=True)
 
     is_active = models.BooleanField("Активен", default=True)
 
