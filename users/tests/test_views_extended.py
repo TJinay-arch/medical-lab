@@ -192,6 +192,7 @@ class TestRegisterViewExtended:
             follow=True,
         )
         # Проверяем, что письмо попало в outbox (не ушло реально)
+        assert response.status_code == 200
         assert len(mail.outbox) == 1
         assert mail.outbox[0].subject == "Подтверждение регистрации"
         assert "email@test.com" in mail.outbox[0].to
