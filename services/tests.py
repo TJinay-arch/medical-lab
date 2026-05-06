@@ -22,4 +22,3 @@ class EmailTest(TestCase):
         mock_email(self.user, self.appointment)
 
         mock_email.assert_called_once()
-

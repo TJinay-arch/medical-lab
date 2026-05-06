@@ -3,13 +3,14 @@
 Расширенные тесты для users/views.py
 Цель: покрытие ~40 строк для достижения 75-90% общего coverage
 """
+
 import pytest
-from django.core import mail
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
+from django.core import mail
+from django.urls import reverse
 from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 User = get_user_model()
 
@@ -39,17 +40,13 @@ def doctor_profile_fixture(db):
     """
     # 🔍 Раскомментируйте правильный импорт:
     from core.models import Doctor  # ← ПРОВЕРЬТЕ ЭТОТ ИМПОРТ!
+
     # from appointments.models import Doctor
     # from users.models import Doctor
 
     def _create_doctor_user(username="doctor_test", email="doc@test.com", password="pass123", **extra_fields):
         user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password,
-            role="doctor",
-            is_active=True,
-            **extra_fields
+            username=username, email=email, password=password, role="doctor", is_active=True, **extra_fields
         )
         # Создаём связанный профиль врача (OneToOne)
         Doctor.objects.create(
@@ -78,10 +75,7 @@ class TestActivateUserView:
     def inactive_user(self, db):
         """Создаёт неактивного пользователя для тестов активации"""
         return User.objects.create_user(
-            username="activate_test",
-            email="activate@test.com",
-            password="pass123",
-            is_active=False
+            username="activate_test", email="activate@test.com", password="pass123", is_active=False
         )
 
     def test_activate_success(self, client, inactive_user):
@@ -152,11 +146,7 @@ class TestDashboardRouter:
     def test_redirect_admin(self, client, db):
         """✅ Админ → appointments:list"""
         admin_user = User.objects.create_user(
-            username="admin_test",
-            email="admin@test.com",
-            password="pass",
-            role="admin",
-            is_active=True
+            username="admin_test", email="admin@test.com", password="pass", role="admin", is_active=True
         )
         client.force_login(admin_user)
         response = client.get(reverse("users:dashboard_router"))
@@ -167,11 +157,7 @@ class TestDashboardRouter:
     def test_redirect_patient(self, client, db):
         """✅ Пациент → appointments:list"""
         patient_user = User.objects.create_user(
-            username="patient_test",
-            email="pat@test.com",
-            password="pass",
-            role="patient",
-            is_active=True
+            username="patient_test", email="pat@test.com", password="pass", role="patient", is_active=True
         )
         client.force_login(patient_user)
         response = client.get(reverse("users:dashboard_router"))
@@ -203,7 +189,7 @@ class TestRegisterViewExtended:
                 "password1": "StrongPass123!",
                 "password2": "StrongPass123!",
             },
-            follow=True
+            follow=True,
         )
         # Проверяем, что письмо попало в outbox (не ушло реально)
         assert len(mail.outbox) == 1
@@ -221,7 +207,7 @@ class TestRegisterViewExtended:
                 "email": "inactive@test.com",
                 "password1": "StrongPass123!",
                 "password2": "StrongPass123!",
-            }
+            },
         )
         user = User.objects.get(email="inactive@test.com")
         assert user.is_active is False
@@ -236,14 +222,11 @@ class TestRegisterViewExtended:
                 "password1": "StrongPass123!",
                 "password2": "StrongPass123!",
             },
-            follow=True
+            follow=True,
         )
         # Проверяем, что сообщение добавлено в контекст
         messages = list(response.context["messages"])
-        assert any(
-            "подтвердите" in str(m).lower() or "письмо" in str(m).lower()
-            for m in messages
-        )
+        assert any("подтвердите" in str(m).lower() or "письмо" in str(m).lower() for m in messages)
 
 
 # ============================================================================
@@ -259,13 +242,9 @@ class TestCustomLoginView:
         assert response.status_code == 200
         assert response.context["title"] == "Вход"
 
-
     def test_login_invalid_credentials(self, client):
         """✅ Неверный пароль → форма перерисовывается со статусом 200 и ошибками"""
-        response = client.post(
-            reverse("users:login"),
-            {"username": "no_such_user", "password": "wrong"}
-        )
+        response = client.post(reverse("users:login"), {"username": "no_such_user", "password": "wrong"})
         # При ошибке форма возвращается со статусом 200 (не редирект!)
         assert response.status_code == 200
         assert response.context["form"].errors  # форма должна содержать ошибки
