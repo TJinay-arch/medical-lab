@@ -1,10 +1,7 @@
-version: "3.9"
-
 services:
-
   db:
-    image: postgres:15
-    restart: always
+    image: postgres:15-bookworm
+    restart: unless-stopped
     env_file: .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -12,28 +9,44 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build:
       context: .
       dockerfile: docker/django/Dockerfile
     command: /entrypoint.sh
-    volumes:
-      - .:/app
-      - static_volume:/app/static
-      - media_volume:/app/media
+    restart: unless-stopped
     env_file: .env
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    volumes:
+      # Исходный код (для разработки)
+      - .:/app
+      # 👇 КЛЮЧЕВОЕ: STATIC_ROOT = "/app/static" в settings.py
+      # Поэтому собираем статику в /app/static, и nginx читает отсюда же
+      - static_volume:/app/staticfiles
+      # Медиа-файлы
+      - media_volume:/app/media
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.29-alpine
     ports:
       - "80:80"
+    restart: unless-stopped
     volumes:
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/static
-      - media_volume:/media
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # 👇 Тот же volume и ТОТ ЖЕ путь, что у web
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     depends_on:
       - web
 
