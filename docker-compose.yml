@@ -27,9 +27,6 @@ services:
       - POSTGRES_PORT=5432
     volumes:
       # Исходный код (для разработки)
-      - .:/app
-      # 👇 КЛЮЧЕВОЕ: STATIC_ROOT = "/app/static" в settings.py
-      # Поэтому собираем статику в /app/static, и nginx читает отсюда же
       - static_volume:/app/staticfiles
       # Медиа-файлы
       - media_volume:/app/media
@@ -44,7 +41,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      # 👇 Тот же volume и ТОТ ЖЕ путь, что у web
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     depends_on:
