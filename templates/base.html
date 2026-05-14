@@ -12,22 +12,24 @@
 
 <body>
 <header class="navbar-custom sticky-top">
-    <div class="container d-flex align-items-center justify-content-between py-2">
+    <div class="container d-flex align-items-center justify-content-between py-2 py-lg-3">
 
-        <!-- ЛОГО -->
-        <a href="/" class="logo-link">
-            <h5 class="logo mb-0">Здоровье Плюс</h5>
+
+        <a href="/" class="logo-link d-flex align-items-center">
+            <h5 class="logo mb-0 fs-6 fs-lg-5">Здоровье Плюс</h5>
         </a>
 
-        <div class="d-flex align-items-center gap-3">
+
+        <div class="d-flex align-items-center gap-2 gap-lg-3">
+
+            <button id="themeToggle" class="btn btn-sm btn-light border-0">
+                <span class="d-none d-sm-inline">🌙</span>
+                <span class="d-sm-none">🌓</span>
+            </button>
+
             {% include 'core/menu.html' %}
 
-            <!-- Переключатель темы -->
-            <button id="themeToggle" class="btn btn-sm btn-light">
-                🌙
-            </button>
         </div>
-
     </div>
 </header>
 <div class="toast-container-custom">
