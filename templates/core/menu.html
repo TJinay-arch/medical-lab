@@ -1,52 +1,64 @@
-<!-- templates/core/menu.html -->
 <nav class="navbar navbar-expand-lg p-0">
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0 position-relative">
 
-        <!-- 🔥 ГАМБУРГЕР-КНОПКА (видна только на мобильных < 992px) -->
-        <button class="navbar-toggler border-0" type="button"
+        <!-- 🔥 ГАМБУРГЕР-КНОПКА (полностью кастомная) -->
+        <button class="navbar-toggler border-0 shadow-none"
+                type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#mobileMenu"
                 aria-controls="mobileMenu"
                 aria-expanded="false"
-                aria-label="Toggle navigation">
+                aria-label="Открыть меню"
+                id="menuToggleBtn">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- 🔥 СКРЫВАЕМОЕ МЕНЮ -->
-        <div class="collapse navbar-collapse" id="mobileMenu">
-            <ul class="navbar-nav align-items-lg-center gap-2 gap-lg-3 w-100">
+        <!-- 🔥 ПОЛНОЭКРАННОЕ МЕНЮ-ОВЕРЛЕЙ -->
+        <div class="collapse navbar-collapse position-fixed top-0 start-0 w-100 vh-100 bg-body zindex-3 p-4"
+             id="mobileMenu"
+             style="display: none;">
 
-                <!-- Ссылки меню -->
+            <!-- Кнопка закрытия (крестик в углу) -->
+            <button class="btn-close position-absolute top-3 end-3"
+                    type="button"
+                    data-bs-target="#mobileMenu"
+                    data-bs-toggle="collapse"
+                    aria-label="Закрыть меню">
+            </button>
+
+            <!-- Центрированное меню -->
+            <ul class="navbar-nav flex-column align-items-center justify-content-center w-100 h-100 gap-4">
+
                 <li class="nav-item">
-                    <a class="nav-link-custom py-2 py-lg-0" href="{% url 'core:about' %}">О компании</a>
+                    <a class="nav-link-custom fs-3 fw-medium" href="{% url 'core:about' %}">О компании</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link-custom py-2 py-lg-0" href="{% url 'services:services' %}">Услуги</a>
+                    <a class="nav-link-custom fs-3 fw-medium" href="{% url 'services:services' %}">Услуги</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link-custom py-2 py-lg-0" href="{% url 'core:contacts' %}">Контакты</a>
+                    <a class="nav-link-custom fs-3 fw-medium" href="{% url 'core:contacts' %}">Контакты</a>
                 </li>
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="{% url 'users:dashboard_router' %}" class="nav-link-custom py-2 py-lg-0">
+                    <a href="{% url 'users:dashboard_router' %}" class="nav-link-custom fs-3 fw-medium">
                         Личный кабинет
                     </a>
                 </li>
                 {% endif %}
 
-                <!-- Кнопки входа/выхода: на мобильном - на всю ширину, на ПК - компактно -->
+                <!-- Кнопки входа/выхода -->
                 {% if not user.is_authenticated %}
-                <li class="nav-item mt-2 mt-lg-0">
-                    <a class="btn btn-soft-primary w-100 w-lg-auto" href="{% url 'users:login' %}">Войти</a>
+                <li class="nav-item mt-3">
+                    <a class="btn btn-soft-primary btn-lg px-5" href="{% url 'users:login' %}">Войти</a>
                 </li>
                 {% else %}
-                <li class="nav-item mt-2 mt-lg-0">
-                    <form method="post" action="{% url 'users:logout' %}" class="w-100 w-lg-auto">
+                <li class="nav-item mt-3">
+                    <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
-                        <button class="btn btn-soft-danger w-100 w-lg-auto">Выйти</button>
+                        <button class="btn btn-soft-danger btn-lg px-5">Выйти</button>
                     </form>
                 </li>
                 {% endif %}

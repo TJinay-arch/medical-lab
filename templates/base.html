@@ -14,19 +14,21 @@
 <header class="navbar-custom sticky-top">
     <div class="container d-flex align-items-center justify-content-between py-2 py-lg-3">
 
-
-        <a href="/" class="logo-link d-flex align-items-center">
+        <!-- 🔥 ЛОГО: скрывается при открытом меню (класс .menu-open) -->
+        <a href="/" class="logo-link d-flex align-items-center header-element">
             <h5 class="logo mb-0 fs-6 fs-lg-5">Здоровье Плюс</h5>
         </a>
 
-
+        <!-- 🔥 ПРАВАЯ ЧАСТЬ: тема + гамбургер -->
         <div class="d-flex align-items-center gap-2 gap-lg-3">
 
-            <button id="themeToggle" class="btn btn-sm btn-light border-0">
+            <!-- Переключатель темы: тоже скрываем при открытом меню -->
+            <button id="themeToggle" class="btn btn-sm btn-light border-0 header-element">
                 <span class="d-none d-sm-inline">🌙</span>
                 <span class="d-sm-none">🌓</span>
             </button>
 
+            <!-- Меню -->
             {% include 'core/menu.html' %}
 
         </div>
@@ -103,6 +105,33 @@
                 }, 300);
             }, 4000);
         });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuToggle = document.getElementById("menuToggleBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const headerElements = document.querySelectorAll(".header-element");
+
+        if (menuToggle && mobileMenu) {
+            // Когда меню открывается
+            mobileMenu.addEventListener("shown.bs.collapse", function () {
+                // Скрываем лого и тему
+                headerElements.forEach(el => el.style.opacity = "0");
+                headerElements.forEach(el => el.style.pointerEvents = "none");
+                // Блокируем скролл страницы
+                document.body.style.overflow = "hidden";
+            });
+
+            // Когда меню закрывается
+            mobileMenu.addEventListener("hidden.bs.collapse", function () {
+                // Показываем лого и тему
+                headerElements.forEach(el => el.style.opacity = "1");
+                headerElements.forEach(el => el.style.pointerEvents = "auto");
+                // Возвращаем скролл
+                document.body.style.overflow = "";
+            });
+        }
     });
 </script>
 </body>

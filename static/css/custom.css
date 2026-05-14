@@ -565,3 +565,163 @@ html, body {
         padding: 0.875rem 1rem;
     }
 }
+
+/* =========================
+   ИСПРАВЛЕНИЕ ГАМБУРГЕРА (убираем прямоугольник)
+========================= */
+
+.navbar-toggler {
+    /* Сбрасываем все дефолтные стили Bootstrap */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0.25rem !important;
+}
+
+/* Убираем фокус-кольцо при нажатии/тапе */
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Убираем синий контур в некоторых браузерах */
+.navbar-toggler:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Иконка гамбургера: делаем чуть крупнее для тача */
+.navbar-toggler-icon {
+    width: 1.75em !important;
+    height: 1.75em !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2826, 26, 26, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Для тёмной темы: меняем цвет иконок */
+[data-theme="dark"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28229, 231, 235, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* =========================
+   ПОЛНОЭКРАННОЕ МЕНЮ-ОВЕРЛЕЙ
+========================= */
+
+#mobileMenu {
+    /* Плавное появление */
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#mobileMenu.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block !important; /* Перебиваем display: none у Bootstrap collapse */
+}
+
+/* Ссылки в меню: крупные, с эффектом при нажатии */
+#mobileMenu .nav-link-custom {
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    transition: transform 0.15s ease;
+}
+
+#mobileMenu .nav-link-custom:active {
+    transform: scale(0.98); /* Эффект «нажатия» на тач-устройствах */
+    opacity: 0.85;
+}
+
+/* Крестик закрытия: крупный, в углу */
+#mobileMenu .btn-close {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.5rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+#mobileMenu .btn-close:hover {
+    opacity: 1;
+}
+
+/* =========================
+   СКРЫТИЕ ЭЛЕМЕНТОВ ХЕДЕРА ПРИ ОТКРЫТОМ МЕНЮ
+========================= */
+
+/* Плавное исчезновение лого и темы */
+.header-element {
+    transition: opacity 0.2s ease;
+}
+
+/* =========================
+   БЛОКИРОВКА СКРОЛЛА ПРИ ОТКРЫТОМ МЕНЮ
+========================= */
+
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================
+   АДАПТИВ: только для мобильных (< 992px)
+========================= */
+
+@media (max-width: 991px) {
+    /* На ПК оставляем стандартное поведение */
+    .navbar-collapse:not(#mobileMenu) {
+        display: flex !important;
+    }
+
+    /* Скрываем стандартный collapse, используем наш оверлей */
+    #mobileMenu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1050; /* Выше хедера (1030) */
+        background: var(--bg);
+    }
+
+    /* Ссылки меню: очень крупные для удобного тапа */
+    #mobileMenu .nav-link-custom {
+        font-size: 1.5rem !important;
+        padding: 1rem 2rem !important;
+        text-align: center;
+    }
+
+    /* Кнопки: на всю ширину */
+    #mobileMenu .btn-lg {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+}
+
+/* =========================
+   НА ПК: скрываем оверлей-меню, показываем обычное
+========================= */
+
+@media (min-width: 992px) {
+    #mobileMenu {
+        display: none !important; /* Полностью отключаем оверлей на ПК */
+    }
+
+    /* Возвращаем стандартное поведение navbar-collapse */
+    .navbar-collapse {
+        display: flex !important;
+    }
+
+    /* Гамбургер скрыт на ПК */
+    .navbar-toggler {
+        display: none !important;
+    }
+}
