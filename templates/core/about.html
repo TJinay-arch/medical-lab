@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}О компании{% endblock %}
+{% block header_title %}О нашей клинике{% endblock %}
+{% block lead_text %}Опыт, доверие и современная медицина{% endblock %}
+
+{% block content %}
+
+<!-- ================= HISTORY ================= -->
+<section class="row align-items-center mb-5 g-5">
+
+    <div class="col-lg-6">
+        <h2 class="mb-3">История компании</h2>
+
+        <p class="text-muted">
+            Медицинский центр «Здоровье Плюс» был основан с целью создания
+            современной клиники, где пациент получает не только лечение,
+            но и полноценное сопровождение на каждом этапе.
+        </p>
+        <p class="text-muted">
+            Медицинский центр «Здоровье Плюс» был основан в [год] году группой врачей-единомышленников, объединённых
+            общей идеей: создать клинику, где медицина — это не просто лечение, а забота о человеке на каждом этапе.
+        </p>
+        <p class="text-muted">
+            Мы начинали с небольшого кабинета и команды из пяти специалистов. Но уже тогда в основе нашей работы лежали
+            три принципа, которые остаются неизменными по сей день:
+            Профессионализм — только сертифицированные врачи с опытом и регулярным повышением квалификации
+            Доступность — понятные цены, прозрачные тарифы и честные рекомендации
+            Человечность — мы слышим пациента, уважаем его время и переживания
+        </p>
+        <p class="text-muted">
+            С момента основания мы развиваемся, внедряем новые технологии
+            и расширяем спектр медицинских услуг.
+        </p>
+    </div>
+
+    <div class="col-md-6">
+        <img src="/static/images/history.png"
+             class="img-fluid rounded-4 shadow-sm clinic-img"
+             alt="history">
+    </div>
+
+</section>
+
+<!-- ================= MISSION ================= -->
+<section class="text-center mb-5">
+
+    <h2 class="mb-3">Наша миссия и ценности</h2>
+
+    <p class="text-muted mx-auto" style="max-width: 700px;">
+        Мы стремимся сделать качественную медицину доступной, безопасной
+        и максимально персонализированной для каждого пациента.
+    </p>
+
+    <div class="row g-4 mt-4">
+
+        <div class="col-md-4">
+            <div class="card-custom h-100">
+                <h5>Доверие</h5>
+                <p class="text-muted">Прозрачность и честность в лечении</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom h-100">
+                <h5>Качество</h5>
+                <p class="text-muted">Только доказательная медицина</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom h-100">
+                <h5>Забота</h5>
+                <p class="text-muted">Индивидуальный подход к каждому пациенту</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= TEAM ================= -->
+<section class="mb-5">
+
+    <h2 class="text-center mb-2">Команда врачей</h2>
+    <p class="text-center text-muted mb-4">
+        Специалисты, которым доверяют здоровье
+    </p>
+
+    <div class="row g-4">
+
+        {% for doctor in doctors %}
+        <div class="col-md-3">
+
+            <div class="doctor-card h-100">
+
+                <!-- ФОТО СВЕРХУ -->
+                {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}"
+                     class="doctor-img"
+                     alt="doctor">
+                {% else %}
+                <div class="doctor-img placeholder"></div>
+                {% endif %}
+
+                <div class="p-3 text-center">
+
+                    <h6 class="mb-1">
+                        {{ doctor.first_name }} {{ doctor.last_name }}
+                    </h6>
+
+                    <p class="text-muted small mb-1">
+                        {{ doctor.get_specialization_display }}
+                    </p>
+
+                    <p class="text-muted small">
+                        Стаж: {{ doctor.experience_years }} лет
+                    </p>
+
+                    <a href="{% url 'core:doctor_detail' doctor.pk %}" class="btn btn-sm btn-soft-primary">
+                        Профиль
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta-block text-center">
+
+    <h3>Хотите узнать больше?</h3>
+    <p class="text-muted">Свяжитесь с нами или запишитесь на консультацию</p>
+
+    <a href="#" class="btn btn-primary me-2">Записаться</a>
+    <a href="{% url 'core:contacts' %}" class="btn btn-soft-primary">Контакты</a>
+
+</section>
+
+{% endblock %}

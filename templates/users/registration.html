@@ -1,0 +1,129 @@
+<!-- register.html -->
+{% extends "base.html" %}
+{% block hero %}{% endblock %}
+{% block content %}
+<h2 class="text-center mb-4 fs-3">Регистрация</h2>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+
+        <form method="post" class="border p-4 rounded">
+            {% csrf_token %}
+
+            <!-- USERNAME -->
+            <div class="mb-3">
+                <label class="form-label">Имя пользователя</label>
+                {{ form.username }}
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+
+            <!-- PASSWORD 1 -->
+            <div class="mb-3 position-relative">
+                <label class="form-label">Пароль</label>
+
+                <div class="input-group">
+                    {{ form.password1 }}
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword1">
+                        👁️
+                    </button>
+                </div>
+
+                <!-- подсказка -->
+                <div id="passwordHelp" class="password-hint d-none">
+                    Пароль должен содержать:
+                    <ul class="mb-0 small">
+                        <li>минимум 8 символов</li>
+                        <li>буквы и цифры</li>
+                        <li>не быть слишком простым</li>
+                    </ul>
+                </div>
+
+                <!-- индикатор -->
+                <div class="progress mt-2" style="height:6px;">
+                    <div id="passwordStrength" class="progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- PASSWORD 2 -->
+            <div class="mb-3">
+                <label class="form-label">Повторите пароль</label>
+
+                <div class="input-group">
+                    {{ form.password2 }}
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword2">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <!-- 👇 НОВЫЙ БЛОК -->
+        <div class="text-center mt-3">
+            <span class="text-muted">Уже есть аккаунт?</span>
+            <a href="{% url 'users:login' %}" class="ms-1">
+                Войти
+            </a>
+        </div>
+
+    </div>
+</div>
+<script>
+    const passwordInput = document.querySelector('#id_password1');
+    const strengthBar = document.getElementById('passwordStrength');
+    const hint = document.getElementById('passwordHelp');
+
+    passwordInput.addEventListener('focus', () => {
+        hint.classList.remove('d-none');
+    });
+
+    passwordInput.addEventListener('blur', () => {
+        hint.classList.add('d-none');
+    });
+
+    passwordInput.addEventListener('input', () => {
+        const val = passwordInput.value;
+
+        let strength = 0;
+
+        if (val.length >= 8) strength += 1;
+        if (/[A-Z]/.test(val)) strength += 1;
+        if (/[0-9]/.test(val)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(val)) strength += 1;
+
+        const width = (strength / 4) * 100;
+        strengthBar.style.width = width + "%";
+
+        // цвета
+        if (width < 40) {
+            strengthBar.className = "progress-bar bg-danger";
+        } else if (width < 70) {
+            strengthBar.className = "progress-bar bg-warning";
+        } else {
+            strengthBar.className = "progress-bar bg-success";
+        }
+    });
+
+    const togglePassword1 = document.getElementById('togglePassword1');
+const togglePassword2 = document.getElementById('togglePassword2');
+
+togglePassword1.addEventListener('click', () => {
+    const input = document.getElementById('id_password1');
+    input.type = input.type === 'password' ? 'text' : 'password';
+});
+
+togglePassword2.addEventListener('click', () => {
+    const input = document.getElementById('id_password2');
+    input.type = input.type === 'password' ? 'text' : 'password';
+});
+</script>
+
+{% endblock %}

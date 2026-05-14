@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Контакты{% endblock %}
+{% block header_title %}Контакты{% endblock %}
+{% block lead_text %}Мы всегда на связи и готовы помочь вам{% endblock %}
+
+{% block content %}
+
+<!-- ================= CONTACT INFO ================= -->
+<section class="row g-5 align-items-stretch mb-5">
+
+    <div class="col-lg-5">
+        <div class="h-100 d-flex flex-column">
+
+            <h2 class="mb-3">Как нас найти</h2>
+
+            <p class="text-muted">
+                Мы находимся в удобной локации с хорошей транспортной доступностью.
+            </p>
+
+            <div class="card-custom mb-3">
+
+                <h6 class="mb-2">📍 Адрес</h6>
+                <p class="text-muted mb-0">
+                    г. Ваш город, ул. Примерная, 10
+                </p>
+
+            </div>
+
+            <div class="card-custom mb-3">
+
+                <h6 class="mb-2">📞 Телефон</h6>
+                <p class="text-muted mb-0">
+                    +7 (999) 123-45-67
+                </p>
+
+            </div>
+
+            <div class="card-custom">
+
+                <h6 class="mb-2">📧 Email</h6>
+                <p class="text-muted mb-0">
+                    info@clinic.ru
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAP ================= -->
+    <div class="col-lg-7">
+
+        <div class="card-custom p-0 h-100 map-wrapper">
+
+            <iframe
+                    class="map-iframe"
+                    src="https://yandex.ru/map-widget/v1/?um=constructor%3Axxxxxxxxxxxxxxxxxxxxxx&source=constructor">
+            </iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= FORM ================= -->
+<section class="mb-5">
+
+    <div class="cta-block">
+
+        <h3 class="text-center mb-2">Обратная связь</h3>
+        <p class="text-center text-muted mb-4">
+            Напишите нам — мы ответим в ближайшее время
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="mb-3">
+                {{ field }}
+            </div>
+            {% endfor %}
+
+            <button class="btn btn-primary w-100 mt-3">Отправить</button>
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

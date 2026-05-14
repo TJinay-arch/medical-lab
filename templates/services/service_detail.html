@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.name }}{% endblock %}
+{% block header_title %}{{ service.name }}{% endblock %}
+{% block lead_text %}Подробная информация об услуге{% endblock %}
+
+{% block content %}
+
+<div class="row g-5">
+
+    <!-- ОСНОВНОЙ БЛОК -->
+    <div class="col-lg-8">
+
+        <div class="card-custom">
+
+            <h3 class="mb-3">Об услуге</h3>
+
+            <p class="text-muted">
+                {{ service.description }}
+            </p>
+
+            <hr class="my-4">
+
+            <h5 class="mb-3">Что входит в услугу</h5>
+
+            <ul class="text-muted mb-0">
+                <li>Первичный осмотр врача</li>
+                <li>Сбор анамнеза</li>
+                <li>Диагностика и анализ состояния</li>
+                <li>Назначение лечения</li>
+                <li>Рекомендации по образу жизни</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- БОКОВАЯ ПАНЕЛЬ -->
+    <div class="col-lg-4">
+
+        <div class="card-custom text-center">
+
+            <h4 class="mb-3">Стоимость</h4>
+
+            <div class="display-6 mb-3">
+                {{ service.price }} ₽
+            </div>
+
+            <a href="{% url 'appointments:create' %}?service={{ service.id }}"
+               class="btn btn-primary w-100 mb-2">
+                Записаться
+            </a>
+
+            <a href="{% url 'services:services' %}" class="btn btn-soft-primary w-100">
+                ← Назад к услугам
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

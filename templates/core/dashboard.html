@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block hero %}{% endblock %}
+{% block title %}Кабинет врача{% endblock %}
+{% block header_title %}Кабинет врача{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h3>Добро пожаловать в кабинет</h3>
+        <p class="text-muted mb-0">Ваше расписание и уведомления</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-4 d-flex flex-column gap-3">
+
+            <!-- NOTIFICATIONS -->
+            <div class="card-custom">
+
+                <h5 class="mb-3">🔔 Уведомления</h5>
+
+                {% if notifications %}
+                {% for n in notifications %}
+                <div class="mb-3 p-2 border rounded">
+                    <div class="small">
+                        {{ n.text }}
+                    </div>
+                    <div class="text-muted small mt-1">
+                        {{ n.created_at|date:"d.m H:i" }}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted">Нет уведомлений</p>
+                {% endif %}
+
+            </div>
+
+            <!-- SCHEDULE -->
+            <div class="mb-3">
+                <a href="?filter=active" class="btn btn-sm btn-outline-primary">Активные</a>
+                <a href="?filter=done" class="btn btn-sm btn-outline-secondary">Завершённые</a>
+            </div>
+            <div class="card-custom">
+
+                <h5 class="mb-3">📅 Расписание</h5>
+
+                {% for day, apps in appointments_by_day.items %}
+
+                <div class="mb-3">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong>{{ day }}</strong>
+                        <span class="badge bg-light text-dark">
+                                {{ apps|length }}
+                            </span>
+                    </div>
+
+                    {% for app in apps %}
+                    <div class="border rounded p-2 mb-2">
+
+                        <div class="d-flex justify-content-between">
+                            <strong class="small">{{ app.service.name }}</strong>
+                            <span class="badge bg-primary">
+                                    {{ app.date|date:"H:i" }}
+                                </span>
+                        </div>
+
+                        <div class="small text-muted">
+                            {{ app.user }}
+                        </div>
+                        {% if app.comment %}
+                        <div class="small text-muted mt-1">
+                            💬 {{ app.comment }}
+                        </div>
+                        {% endif %}
+                        <a href="{% url 'appointments:doctor_result' app.id %}"
+                           class="btn btn-outline-success btn-sm mt-2">
+                            {% if app.result %}
+                            Редактировать результат
+                            {% else %}
+                            Заполнить результат
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                {% endfor %}
+                <div class="d-flex justify-content-between mt-3">
+
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}&filter={{ filter }}"
+                       class="btn btn-outline-secondary btn-sm">
+                        ← Назад
+                    </a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&filter={{ filter }}"
+                       class="btn btn-outline-secondary btn-sm ms-auto">
+                        Вперёд →
+                    </a>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: SIMPLE CALENDAR -->
+        <div class="col-lg-8">
+
+            <div class="card-custom h-100">
+
+                <h5 class="mb-3">📆 Календарь</h5>
+
+                <!-- iframe календарь -->
+                <div style="position: relative; width: 100%; height: 650px;">
+
+                    <iframe
+                            src="https://calendar.google.com/calendar/embed?src=ru.russian%23holiday%40group.v.calendar.google.com&ctz=Europe%2FMoscow"
+                            style="border: 0"
+                            width="100%"
+                            height="100%"
+                            frameborder="0"
+                            scrolling="no">
+                    </iframe>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

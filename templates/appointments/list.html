@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Мои записи{% endblock %}
+{% block header_title %}Мои записи{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3 class="mb-4">Мои записи</h3>
+
+    <!-- ФИЛЬТРЫ -->
+    <div class="mb-4">
+        <a href="?filter=upcoming" class="btn btn-outline-primary btn-sm">Будущие</a>
+        <a href="?filter=past" class="btn btn-outline-secondary btn-sm">Прошедшие</a>
+        <a href="?" class="btn btn-outline-dark btn-sm">Все</a>
+    </div>
+
+    {% if appointments %}
+    <div class="row">
+
+        {% for appointment in appointments %}
+        <div class="col-md-6 mb-4">
+
+            <div class="card-custom p-3">
+
+                <h5>{{ appointment.service.name }}</h5>
+
+                <p class="mb-1">
+                    <strong>Врач:</strong> {{ appointment.doctor }}
+                </p>
+
+                <p class="mb-2">
+                    <strong>Дата:</strong>
+                    {{ appointment.date|date:"d.m.Y H:i" }}
+                </p>
+
+                <!-- СТАТУС -->
+                <span class="badge
+                    {% if appointment.status == 'new' %}bg-warning
+                    {% elif appointment.status == 'confirmed' %}bg-success
+                    {% elif appointment.status == 'canceled' %}bg-danger
+                    {% elif appointment.status == 'done' %}bg-secondary
+                    {% endif %}
+                ">
+                    {{ appointment.get_status_display }}
+                </span>
+
+                <div class="mt-3 d-flex gap-2">
+
+                    <!-- ПЕРЕНОС -->
+                    {% if appointment.status == 'new' or appointment.status == 'confirmed' %}
+                    <a href="{% url 'appointments:reschedule' appointment.id %}"
+                       class="btn btn-outline-primary btn-sm">
+                        Перенести
+                    </a>
+                    {% endif %}
+
+                    <!-- ОТМЕНА (ПРОСТО POST) -->
+                    {% if appointment.status != 'canceled' and appointment.status != 'done' %}
+                    <form method="post" action="{% url 'appointments:cancel' appointment.id %}">
+                        {% csrf_token %}
+
+                        <a href="{% url 'appointments:cancel_confirm' appointment.id %}"
+                           class="btn btn-outline-danger btn-sm">
+                            Отменить
+                        </a>
+                    </form>
+                    {% endif %}
+
+                </div>
+                {% if appointment.result %}
+                <a href="{% url 'appointments:result_detail' appointment.result.id %}"
+                   class="btn btn-outline-success btn-sm">
+                    Результаты
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <div class="text-center text-muted">
+        <p>У вас пока нет записей</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

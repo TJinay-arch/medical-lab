@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ doctor.first_name }} {{ doctor.last_name }}{% endblock %}
+
+{% block header_title %}
+{{ doctor.first_name }} {{ doctor.last_name }}
+{% endblock %}
+
+{% block lead_text %}
+{{ doctor.get_specialization_display }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row g-5">
+
+    <!-- LEFT: PHOTO -->
+    <div class="col-lg-5">
+
+        <div class="card-custom p-0 overflow-hidden">
+
+            {% if doctor.photo %}
+            <img src="{{ doctor.photo.url }}"
+                 class="doctor-detail-img"
+                 alt="doctor">
+            {% else %}
+            <div class="doctor-detail-img placeholder"></div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT: INFO -->
+    <div class="col-lg-7">
+
+        <div class="card-custom">
+
+            <h3 class="mb-3">
+                {{ doctor.first_name }} {{ doctor.last_name }}
+            </h3>
+
+            <p class="text-muted">
+                {{ doctor.get_specialization_display }}
+            </p>
+
+            <p>
+                <strong>Стаж:</strong> {{ doctor.experience_years }} лет
+            </p>
+
+            <hr>
+
+            <p class="text-muted">
+                Врач клиники «Здоровье Плюс».
+                Принимает пациентов по записи и ведёт индивидуальные программы лечения.
+            </p>
+
+            <a href="{% url 'appointments:create' %}?doctor={{ doctor.id }}"
+               class="btn btn-primary">
+                Записаться
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

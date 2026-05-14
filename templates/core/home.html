@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block header_title %}Забота о вашем здоровье{% endblock %}
+{% block lead_text %}Современная медицина с человеческим подходом{% endblock %}
+
+{% block content %}
+
+<!-- 🔹 О КОМПАНИИ -->
+<div class="row align-items-center mb-5 g-5">
+
+    <div class="col-lg-6">
+        <h2 class="mb-3">О нашей клинике</h2>
+
+        <p class="text-muted">
+            Медицинский центр «Здоровье Плюс» — современная клиника с акцентом
+            на точную диагностику и персонализированное лечение.
+        </p>
+
+        <p class="text-muted">
+            Компания объединяет многолетний практический опыт квалифицированных врачей и современные
+            медицинские технологии, чтобы обеспечить пациентам максимально эффективное и безопасное лечение.
+        </p>
+
+        <p class="text-muted">
+            «Здоровье Плюс» — это место, где технологии служат человеку, а профессионализм врачей помогает достигать
+            стабильных и долгосрочных результатов лечения. Мы верим, что качественная медицина должна быть доступной,
+            понятной и ориентированной на пациента.
+        </p>
+    </div>
+
+    <div class="col-lg-6 text-center">
+        <img src="/static/images/clinic.png"
+             class="img-fluid rounded-4 shadow-sm clinic-img"
+             alt="О клинике">
+    </div>
+
+</div>
+
+
+<!-- 🔹 ПРЕИМУЩЕСТВА (у тебя уже были — оставляем, но улучшаем) -->
+<div class="row g-4 mb-5 text-center">
+
+    <div class="col-md-4">
+        <div class="card-custom h-100">
+            <h5>Опытные врачи</h5>
+            <p class="text-muted">50+ специалистов с высокой квалификацией</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom h-100">
+            <h5>Современная диагностика</h5>
+            <p class="text-muted">Точное оборудование последнего поколения</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-custom h-100">
+            <h5>Комплексный подход</h5>
+            <p class="text-muted">От диагностики до полного восстановления</p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 🔹 УСЛУГИ -->
+<div class="mb-5">
+
+    <h2 class="text-center mb-2">Наши услуги</h2>
+    <p class="text-center text-muted mb-4">
+        Полный спектр медицинской диагностики и лечения
+    </p>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="service-card h-100">
+                <h6>Терапия</h6>
+                <p class="text-muted small">Диагностика и лечение заболеваний внутренних органов</p>
+                <a href="{% url 'services:services' %}" class="btn btn-sm btn-soft-primary">Подробнее</a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="service-card h-100">
+                <h6>Кардиология</h6>
+                <p class="text-muted small">Обследование сердца и сосудистой системы</p>
+                <a href="{% url 'services:services' %}" class="btn btn-sm btn-soft-primary">Подробнее</a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="service-card h-100">
+                <h6>Педиатрия</h6>
+                <p class="text-muted small">Наблюдение и лечение детей всех возрастов</p>
+                <a href="{% url 'services:services' %}" class="btn btn-sm btn-soft-primary">Подробнее</a>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="service-card h-100">
+                <h6>Лаборатория</h6>
+                <p class="text-muted small">Анализы и точная лабораторная диагностика</p>
+                <a href="{% url 'services:services' %}" class="btn btn-sm btn-soft-primary">Подробнее</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 🔹 КОНТАКТЫ -->
+<div class="row align-items-center mb-5 g-5">
+
+    <div class="col-lg-6">
+        <h2 class="mb-3">Контакты</h2>
+
+        <p class="text-muted">📍 г. Ваш город, ул. Примерная, 10</p>
+        <p class="text-muted">📞 +7 (999) 123-45-67</p>
+        <p class="text-muted">📧 info@clinic.ru</p>
+
+        <a href="#" class="btn btn-primary mt-2">Построить маршрут</a>
+    </div>
+
+    <div class="col-lg-6 text-center">
+        <img src="/static/images/building.png"
+             class="img-fluid rounded-4 shadow-sm clinic-img"
+             alt="Здание клиники">
+    </div>
+
+</div>
+
+<div class="row justify-content-center mt-5">
+
+    <div class="col-lg-10">
+
+        <div class="cta-block">
+
+            <h3 class="text-center mb-4">Обратная связь</h3>
+            <p class="text-center text-muted mb-4">
+                Мы ответим вам в ближайшее время
+            </p>
+
+            <form method="post" action="{% url 'core:contacts' %}">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        {{ form.name }}
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form.email }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form.message }}
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary px-5">
+                            Отправить
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

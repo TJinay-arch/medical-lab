@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Результат диагностики{% endblock %}
+{% block header_title %}Результат диагностики{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card-custom p-4">
+
+        <h4 class="mb-3">Заключение врача</h4>
+
+        <p class="text-muted">
+            {{ result.text }}
+        </p>
+
+        {% if result.file %}
+        <hr>
+        <h6>Файлы:</h6>
+
+        <a href="{{ result.file.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+            Скачать документ
+        </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

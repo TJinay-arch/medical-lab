@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Запись на прием{% endblock %}
+
+{% block header_title %}Запись на прием{% endblock %}
+
+{% block lead_text %}
+Выберите врача, услугу и удобное время
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="card-custom">
+            <h3 class="mb-4 text-center">Форма записи</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ВРАЧ -->
+                <div class="mb-3">
+                    <label class="form-label">Врач</label>
+                    {{ form.doctor }}
+                </div>
+
+                <!-- УСЛУГА -->
+                <div class="mb-3">
+                    <label class="form-label">Услуга</label>
+                    {{ form.service }}
+                </div>
+
+                <!-- ПОДСКАЗКА -->
+                <p class="text-muted">
+                    Сначала выберите врача и дату — затем появятся доступные слоты
+                </p>
+
+                <!-- ДАТА -->
+                <div class="mb-3">
+                    <label class="form-label">Дата приема</label>
+                    {{ form.date }}
+                </div>
+
+                <!-- СЛОТЫ -->
+                <div class="mb-3">
+                    <label class="form-label">Время</label>
+                    <div id="slots" class="d-flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- СКРЫТОЕ ПОЛЕ -->
+                <input type="hidden" name="time" id="selected-time">
+
+                <!-- КОММЕНТАРИЙ -->
+                <div class="mb-3">
+                    <label class="form-label">Комментарий</label>
+                    {{ form.comment }}
+                </div>
+
+                <!-- КНОПКА -->
+                <button type="submit" id="submit-btn" class="btn btn-primary w-100" disabled>
+                    Записаться
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-3 text-muted small">
+            После записи врач подтвердит ваш прием
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+    const doctorSelect = document.getElementById("id_doctor");
+    const serviceSelect = document.getElementById("id_service");
+    const dateInput = document.getElementById("id_date");
+    const slotsContainer = document.getElementById("slots");
+    const hiddenTime = document.getElementById("selected-time");
+    const submitBtn = document.getElementById("submit-btn");
+
+
+    // =======================
+    // ЗАПРЕТ ПРОШЛЫХ ДАТ
+    // =======================
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.setAttribute("min", today);
+
+
+    // =======================
+    // ВРАЧ → УСЛУГИ
+    // =======================
+    doctorSelect.addEventListener("change", function() {
+
+        const doctorId = this.value;
+
+        // сброс слотов
+        slotsContainer.innerHTML = "";
+        hiddenTime.value = "";
+        submitBtn.disabled = true;
+
+        if (!doctorId) return;
+
+        fetch(`/appointments/api/doctor/services/?doctor=${doctorId}`)
+            .then(res => res.json())
+            .then(data => {
+
+                serviceSelect.innerHTML = "";
+
+                data.forEach(service => {
+                    const option = document.createElement("option");
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    serviceSelect.appendChild(option);
+                });
+            });
+    });
+
+
+    // =======================
+    // ДАТА → СЛОТЫ
+    // =======================
+    dateInput.addEventListener("change", function () {
+
+        const doctorId = doctorSelect.value;
+        const date = this.value;
+
+        slotsContainer.innerHTML = "";
+        hiddenTime.value = "";
+        submitBtn.disabled = true;
+
+        if (!doctorId) {
+            slotsContainer.innerHTML = "<p class='text-danger'>Сначала выберите врача</p>";
+            return;
+        }
+
+        if (!date) return;
+
+        // loading
+        slotsContainer.innerHTML = "<p>Загрузка...</p>";
+
+        fetch(`/appointments/api/slots/?doctor=${doctorId}&date=${date}`)
+            .then(res => res.json())
+            .then(data => {
+
+                slotsContainer.innerHTML = "";
+
+                if (data.length === 0) {
+                    slotsContainer.innerHTML = "<p>Нет свободных слотов</p>";
+                    return;
+                }
+
+                data.forEach(time => {
+
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "btn btn-outline-primary slot-btn";
+
+                    btn.textContent = time;
+
+                    btn.onclick = function () {
+
+                        hiddenTime.value = time;
+                        submitBtn.disabled = false;
+
+                        document.querySelectorAll(".slot-btn")
+                            .forEach(b => b.classList.remove("active"));
+
+                        btn.classList.add("active");
+                    };
+
+                    slotsContainer.appendChild(btn);
+                });
+
+            });
+    });
+</script>
+
+{% endblock %}
