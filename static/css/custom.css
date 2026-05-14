@@ -322,10 +322,7 @@ input:-webkit-autofill:focus {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.alert.fade {
-    opacity: 0;
-    transform: translateY(-10px);
-}
+
 
 .align-items-stretch {
     align-items: stretch !important;

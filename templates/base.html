@@ -89,13 +89,13 @@
         const alerts = document.querySelectorAll(".toast-alert");
 
         alerts.forEach((alert) => {
+
             setTimeout(() => {
-                // Начинаем плавное скрытие
-                alert.style.opacity = "0";
-                alert.style.transform = "translateY(-10px)";
+                // Добавляем класс fade для Bootstrap-анимации
+                alert.classList.add("fade");
 
                 setTimeout(() => {
-                    if (alert.parentNode) {
+                    if (alert.parentNode && alert.closest(".toast-container-custom")) {
                         alert.remove();
                     }
                 }, 300);
