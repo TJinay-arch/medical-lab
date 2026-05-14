@@ -86,24 +86,21 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
-        const alerts = document.querySelectorAll(".alert");
+        const alerts = document.querySelectorAll(".toast-alert");
 
         alerts.forEach((alert) => {
-
-            // через 3.5 секунды начинаем скрывать
             setTimeout(() => {
-    alert.style.opacity = "0";
-    alert.style.transform = "translateY(-10px)";
+                // Начинаем плавное скрытие
+                alert.style.opacity = "0";
+                alert.style.transform = "translateY(-10px)";
 
-    setTimeout(() => {
-        alert.remove();
-    }, 300);
-
-}, 3500);
-
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 300);
+            }, 4000);
         });
-
     });
 </script>
 </body>
